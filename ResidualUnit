@@ -1,0 +1,23 @@
+class ResidualUnit(tf.keras.Model):
+    def __init__(self, filter_in, filter_out, kernel_size):
+        super(ResidualUnit, self).__init__()
+        self.bn1 = tf.keras.layers.BatchNormalization()
+        self.conv1 = tf.keras.layers.Conv2D(filter_out, kernel_size, padding='same')
+        
+        self.bn2 = tf.keras.layers.BatchNormalization()
+        self.conv2 = tf.keras.layers.Conv2D(filter_out, kernel_size, padding='same')
+        
+        if filter_in == filter_out:
+            self.identity = lambda x: x
+        else:
+            self.identity = tf.keras.layers.Conv2D(filter_out, (1,1), padding='same')
+
+    def call(self, x, training=False, mask=None):
+        h = self.bn1(x, training=training)
+        h = tf.nn.relu(h)
+        h = self.conv1(h)
+        
+        h = self.bn2(h, training=training)
+        h = tf.nn.relu(h)
+        h = self.conv2(h)
+        return self.identity(x) + h
