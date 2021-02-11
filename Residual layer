@@ -1,0 +1,11 @@
+class ResnetLayer(tf.keras.Model):
+    def __init__(self, filter_in, filters, kernel_size):
+        super(ResnetLayer, self).__init__()
+        self.sequence = list()
+        for f_in, f_out in zip([filter_in] + list(filters), filters):
+            self.sequence.append(ResidualUnit(f_in, f_out, kernel_size))
+
+    def call(self, x, training=False, mask=None):
+        for unit in self.sequence:
+            x = unit(x, training=training)
+        return x
