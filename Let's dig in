@@ -1,0 +1,8 @@
+model=DenseNet()
+for step in range(10):
+    for x,y in iter(train_dataset):
+        train_step(model,x,y,loss_object,optimizer,train_loss,train_acc)
+    for x,y in iter(test_dataset):
+        test_step(model,x,y,loss_object,train_loss,train_acc)
+    plate="step:{:} train_loss:{:.2f}  train_acc:{:.2f}  test_loss:{:.2f}  test_acc:{:.2f}"
+    print(plate.format(step,train_loss.result(),train_acc.result()*100,test_loss.result(),test_acc.result()*100))
