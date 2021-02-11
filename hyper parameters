@@ -1,0 +1,9 @@
+#define parameters to make train_step function for training
+loss_object=tf.keras.losses.CategoricalCrossentropy()
+optimizer=tf.keras.optimizers.Adam(lr_learning_rate)
+
+train_loss=tf.keras.metrics.Mean()
+train_acc=tf.keras.metrics.CategoricalAccuracy()
+
+test_loss=tf.keras.metrics.Mean()
+test_acc=tf.keras.metrics.CategoricalAccuracy()
