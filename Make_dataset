@@ -1,0 +1,31 @@
+#make dataset
+def get_label(path):
+    l=os.path.basename(path).replace(".png","").split("_")[-1]
+    return l
+
+def hot_coding(path):
+    l=get_label(path)
+    
+    return np.array(l==cls_classes,np.uint8)
+
+def read_image(path):
+    img=tf.io.read_file(path)
+    image=tf.io.decode_image(img)
+    image=tf.cast(image,tf.float32)
+    return image
+
+def preprocessing(image,label):
+    image=tf.image.random_flip_up_down(image)
+    image=tf.image.random_flip_left_right(image)
+    return image,label
+
+cls_classes=np.unique([get_label(path) for path in train_path])
+
+train_data=[read_image(path) for path in train_path]
+train_classes=[hot_coding(path) for path in train_path]
+
+test_data=[read_image(path) for path in test_path]
+test_classes=[hot_coding(path) for path in test_path]
+
+train_dataset=tf.data.Dataset.from_tensor_slices((train_data,train_classes)).batch(256)
+test_dataset=tf.data.Dataset.from_tensor_slices((test_data,test_classes)).batch(256)
